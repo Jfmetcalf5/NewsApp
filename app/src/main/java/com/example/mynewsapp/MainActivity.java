@@ -57,8 +57,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Result>> loader, List<Result> results) {
-        resultsArrayAdapter.clear();
-        resultsArrayAdapter.addAll(results);
+//        resultsArrayAdapter.clear();
+//        resultsArrayAdapter.addAll(results);
+        resultsArrayAdapter.notifyDataSetChanged();
     }
 
     @Override

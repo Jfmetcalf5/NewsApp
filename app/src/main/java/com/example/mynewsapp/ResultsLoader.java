@@ -27,6 +27,11 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
 
     static ArrayList<Result> resultsArray = new ArrayList<Result>();
 
+    @Override
+    public void deliverResult(@Nullable List<Result> data) {
+        super.deliverResult(data);
+    }
+
     public ResultsLoader(Context context) {
         super(context);
     }

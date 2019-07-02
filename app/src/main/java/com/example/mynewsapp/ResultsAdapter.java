@@ -1,6 +1,8 @@
 package com.example.mynewsapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,27 +18,32 @@ public class ResultsAdapter extends ArrayAdapter<Result> {
         super(context, 0, results);
     }
 
-    public void setResults(List<Result> results) {
-
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        Result result = getItem(position);
+        final Result result = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
         }
 
+        View container = convertView.findViewById(R.id.container);
+        container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(result._webUrl));
+                getContext().startActivity(browserIntent);
+            }
+        });
+
         TextView webTitle = convertView.findViewById(R.id.webTitle);
         webTitle.setText(result._webTitle);
 
         TextView webUrl = convertView.findViewById(R.id.webUrl);
-        webTitle.setText(result._webUrl);
+        webUrl.setText(result._webUrl);
 
         TextView sectionName = convertView.findViewById(R.id.sectionName);
-        webTitle.setText(result._sectionName);
+        sectionName.setText(result._sectionName);
 
         return convertView;
     }
