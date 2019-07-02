@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MyNewsApp</string>
+
+    <string name="webUrl">MyNewsApp</string>
+    <string name="webTitle">MyNewsApp</string>
+    <string name="sectionName">MyNewsApp</string>
+
 </resources>

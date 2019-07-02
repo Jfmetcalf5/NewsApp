@@ -25,7 +25,7 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
 
     String stringUrl = "https://content.guardianapis.com/search?api-key=26c9d5e4-98f2-4abc-8ed2-eba0bea2e26b";
 
-    ArrayList<Result> resultsArray = new ArrayList<Result>();
+    static ArrayList<Result> resultsArray = new ArrayList<Result>();
 
     public ResultsLoader(Context context) {
         super(context);
@@ -80,35 +80,25 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
             // Create a JSONObject from the JSON response string
             JSONObject baseJsonResponse = new JSONObject(resultJSON);
 
-            // Extract the JSONArray associated with the key called "features",
-            // which represents a list of features (or earthquakes).
-            JSONArray resultArray = baseJsonResponse.getJSONArray("results");
+            JSONObject response = baseJsonResponse.getJSONObject("response");
+            JSONArray resultArray = response.getJSONArray("results");
 
             // For each earthquake in the earthquakeArray, create an {@link Earthquake} object
             for (int i = 0; i < resultArray.length(); i++) {
 
-                // Get a single earthquake at position i within the list of earthquakes
                 JSONObject currentResult = resultArray.getJSONObject(i);
 
-                // For a given earthquake, extract the JSONObject associated with the
-                // key called "properties", which represents a list of all properties
-                // for that earthquake.
-                JSONObject results = currentResult.getJSONObject("results");
 
-                // Extract the value for the key called "mag"
-                String id = results.getString("id");
+                String id = currentResult.getString("id");
 
-                // Extract the value for the key called "place"
-                String sectionName = results.getString("sectionName");
+                String sectionName = currentResult.getString("sectionName");
 
-                // Extract the value for the key called "url"
-                String webUrl = results.getString("webUrl");
+                String webUrl = currentResult.getString("webUrl");
 
-                // Create a new {@link Earthquake} object with the magnitude, location, time,
-                // and url from the JSON response.
-                Result result = new Result(id, sectionName, webUrl);
+                String webTitle = currentResult.getString("webTitle");
 
-                // Add the new {@link Earthquake} to the list of earthquakes.
+                Result result = new Result(id, sectionName, webTitle, webUrl);
+
                 resultsArray.add(result);
                 Log.e("MainActivity", "Adding result" + result._sectionName + ", " + result._webUrl + ", " + result._id);
             }

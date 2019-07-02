@@ -1,14 +1,20 @@
 package com.example.mynewsapp;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,16 +31,20 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Result>> {
 
-    String stringUrl = "https://content.guardianapis.com/search?api-key=26c9d5e4-98f2-4abc-8ed2-eba0bea2e26b";
-
-    ArrayList<Result> resultsArray = new ArrayList<Result>();
+    ArrayAdapter<Result> resultsArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportLoaderManager().initLoader(0, null, this).forceLoad();
+
+        resultsArrayAdapter = new ResultsAdapter(this, ResultsLoader.resultsArray);
+        ListView listView = findViewById(R.id.list_view);
+
+        listView.setAdapter(resultsArrayAdapter);
     }
 
     @NonNull
@@ -46,8 +56,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader loader, Object o) {
-        Log.i("MainActivity", "onLoadFinished Called");
+    public void onLoadFinished(@NonNull Loader<List<Result>> loader, List<Result> results) {
+        resultsArrayAdapter.clear();
+        resultsArrayAdapter.addAll(results);
     }
 
     @Override
