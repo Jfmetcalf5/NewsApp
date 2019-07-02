@@ -37,13 +37,13 @@ public class ResultsAdapter extends ArrayAdapter<Result> {
         });
 
         TextView webTitle = convertView.findViewById(R.id.webTitle);
-        webTitle.setText(result._webTitle);
+        webTitle.setText(result.getwebTitle());
 
         TextView webUrl = convertView.findViewById(R.id.webUrl);
-        webUrl.setText(result._webUrl);
+        webUrl.setText(result.getWebUrl());
 
         TextView sectionName = convertView.findViewById(R.id.sectionName);
-        sectionName.setText(result._sectionName);
+        sectionName.setText(result.getSectionName());
 
         return convertView;
     }

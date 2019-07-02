@@ -72,29 +72,20 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
     }
 
     private List<Result> extractResultsFromJson(String resultJSON) {
-        // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(resultJSON)) {
             return null;
         }
 
-        // Try to parse the JSON response string. If there's a problem with the way the JSON
-        // is formatted, a JSONException exception object will be thrown.
-        // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
 
-            // Create a JSONObject from the JSON response string
             JSONObject baseJsonResponse = new JSONObject(resultJSON);
 
             JSONObject response = baseJsonResponse.getJSONObject("response");
             JSONArray resultArray = response.getJSONArray("results");
 
-            // For each earthquake in the earthquakeArray, create an {@link Earthquake} object
             for (int i = 0; i < resultArray.length(); i++) {
 
                 JSONObject currentResult = resultArray.getJSONObject(i);
-
-
-                String id = currentResult.getString("id");
 
                 String sectionName = currentResult.getString("sectionName");
 
@@ -102,27 +93,22 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
 
                 String webTitle = currentResult.getString("webTitle");
 
-                Result result = new Result(id, sectionName, webTitle, webUrl);
+                Result result = new Result(sectionName, webTitle, webUrl);
 
                 resultsArray.add(result);
-                Log.e("MainActivity", "Adding result" + result._sectionName + ", " + result._webUrl + ", " + result._id);
+                Log.e("ResultLoader", "Adding result" + result.getSectionName() + ", " + result.getWebUrl()+ ", " + result.getwebTitle());
             }
 
         } catch (JSONException e) {
-            // If an error is thrown when executing any of the above statements in the "try" block,
-            // catch the exception here, so the app doesn't crash. Print a log message
-            // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
+            Log.e("ResultsLoader", "Problem parsing the JSON results", e);
         }
 
-        // Return the list of earthquakes
         return resultsArray;
     }
 
     private String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
-        // If the URL is null, then return early.
         if (url == null) {
             return jsonResponse;
         }
@@ -131,13 +117,11 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
         InputStream inputStream = null;
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setReadTimeout(10000);
+            urlConnection.setConnectTimeout(15000);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
-            // If the request was successful (response code 200),
-            // then read the input stream and parse the response.
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
@@ -145,15 +129,12 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
                 Log.e("ResultLoader", "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e("ResultLoader", "Problem retrieving the earthquake JSON results.", e);
+            Log.e("ResultLoader", "Problem retrieving the JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
             if (inputStream != null) {
-                // Closing the input stream could throw an IOException, which is why
-                // the makeHttpRequest(URL url) method signature specifies than an IOException
-                // could be thrown.
                 inputStream.close();
             }
         }
