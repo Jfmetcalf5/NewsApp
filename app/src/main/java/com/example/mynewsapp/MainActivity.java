@@ -35,15 +35,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ResultsLoader resultsLoader = new ResultsLoader(this);
-        resultsLoader.loadInBackground();
     }
 
     @NonNull
     @Override
     public Loader onCreateLoader(int i, @Nullable Bundle bundle) {
         Log.i("MainActivity", "onCreateLoader Called");
-        return null;
+        ResultsLoader resultsLoader = new ResultsLoader(this);
+        return resultsLoader;
     }
 
     @Override
