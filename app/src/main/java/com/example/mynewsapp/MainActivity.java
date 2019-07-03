@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportLoaderManager().initLoader(0, null, this).forceLoad();
-
         resultsArrayAdapter = new ResultsAdapter(this, ResultsLoader.resultsArray);
         ListView listView = findViewById(R.id.list_view);
 
