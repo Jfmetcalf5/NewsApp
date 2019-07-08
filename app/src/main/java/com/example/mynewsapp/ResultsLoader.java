@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
 
-    String stringUrl = "http://content.guardianapis.com/search?show-references=true&api-key=26c9d5e4-98f2-4abc-8ed2-eba0bea2e26b";
+    String stringUrl = "http://content.guardianapis.com/search?show-tags=contributor&api-key=26c9d5e4-98f2-4abc-8ed2-eba0bea2e26b";
 
     static ArrayList<Result> resultsArray = new ArrayList<Result>();
 
@@ -96,13 +96,13 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
 
                 String authorPlaceholder = "No Author";
 
-                if (currentResult.getJSONArray("references") != null) {
-                    JSONArray referencesArray = currentResult.getJSONArray("references");
-                    for (int r = 0; r < referencesArray.length(); r++) {
-                        JSONObject currentReference = resultArray.getJSONObject(i);
-                        String author = currentReference.getString("author");
-                        authorPlaceholder = author;
+                if (currentResult.getJSONArray("tags") != null) {
+                    JSONArray tagsArray = currentResult.getJSONArray("tags");
+                    for (int r = 0; r < tagsArray.length(); r++) {
+                        JSONObject currentReference = tagsArray.getJSONObject(r);
+                        authorPlaceholder = currentReference.getString("webTitle");
                     }
+
                 }
 
                 Result result = new Result(sectionName, webTitle, webUrl, webPublicationDate, authorPlaceholder);
