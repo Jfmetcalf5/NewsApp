@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
 
-    String stringUrl = "https://content.guardianapis.com/search?api-key=26c9d5e4-98f2-4abc-8ed2-eba0bea2e26b";
+    String stringUrl = "http://content.guardianapis.com/search?show-references=true&api-key=26c9d5e4-98f2-4abc-8ed2-eba0bea2e26b";
 
     static ArrayList<Result> resultsArray = new ArrayList<Result>();
 
@@ -39,7 +39,6 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
     @Nullable
     @Override
     public List<Result>loadInBackground() {
-
         return sendRequest();
     }
 
@@ -93,7 +92,20 @@ public class ResultsLoader extends AsyncTaskLoader<List<Result>> {
 
                 String webTitle = currentResult.getString("webTitle");
 
-                Result result = new Result(sectionName, webTitle, webUrl);
+                String webPublicationDate = currentResult.getString("webPublicationDate");
+
+                String authorPlaceholder = "No Author";
+
+                if (currentResult.getJSONArray("references") != null) {
+                    JSONArray referencesArray = currentResult.getJSONArray("references");
+                    for (int r = 0; r < referencesArray.length(); r++) {
+                        JSONObject currentReference = resultArray.getJSONObject(i);
+                        String author = currentReference.getString("author");
+                        authorPlaceholder = author;
+                    }
+                }
+
+                Result result = new Result(sectionName, webTitle, webUrl, webPublicationDate, authorPlaceholder);
 
                 resultsArray.add(result);
                 Log.e("ResultLoader", "Adding result" + result.getSectionName() + ", " + result.getWebUrl()+ ", " + result.getwebTitle());

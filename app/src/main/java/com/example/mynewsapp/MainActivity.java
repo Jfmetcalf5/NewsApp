@@ -1,6 +1,8 @@
 package com.example.mynewsapp;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,15 +39,33 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     ArrayAdapter<Result> resultsArrayAdapter;
 
+    TextView blankText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportLoaderManager().initLoader(0, null, this).forceLoad();
-        resultsArrayAdapter = new ResultsAdapter(this, ResultsLoader.resultsArray);
-        ListView listView = findViewById(R.id.list_view);
 
-        listView.setAdapter(resultsArrayAdapter);
+        blankText = findViewById(R.id.blank_view);
+        blankText.setVisibility(View.GONE);
+
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if (isConnected) {
+            getSupportLoaderManager().initLoader(0, null, this).forceLoad();
+            resultsArrayAdapter = new ResultsAdapter(this, ResultsLoader.resultsArray);
+            ListView listView = findViewById(R.id.list_view);
+
+            listView.setAdapter(resultsArrayAdapter);
+        } else {
+            hideProgressBar();
+            blankText.setVisibility(View.VISIBLE);
+            blankText.setText(R.string.noInternet);
+        }
     }
 
     @NonNull
@@ -56,12 +78,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Result>> loader, List<Result> results) {
-        resultsArrayAdapter.notifyDataSetChanged();
+        hideProgressBar();
+        if (results != null && !results.isEmpty()) {
+            resultsArrayAdapter.notifyDataSetChanged();
+        } else {
+            blankText.setVisibility(View.VISIBLE);
+            blankText.setText(R.string.noResults);
+        }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader loader) {
         resultsArrayAdapter.clear();
+    }
+
+    private void hideProgressBar() {
+        ProgressBar progressBar = findViewById(R.id.loading_indicator);
+        progressBar.setVisibility(View.GONE);
     }
 
 }

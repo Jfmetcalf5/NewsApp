@@ -4,5 +4,7 @@
     <string name="webUrl">MyNewsApp</string>
     <string name="webTitle">MyNewsApp</string>
     <string name="sectionName">MyNewsApp</string>
+    <string name="noResults">No Results Available</string>
+    <string name="noInternet">No Internet Connection</string>
 
 </resources>

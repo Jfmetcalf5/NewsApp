@@ -9,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
 public class ResultsAdapter extends ArrayAdapter<Result> {
 
@@ -31,19 +34,33 @@ public class ResultsAdapter extends ArrayAdapter<Result> {
         container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(result._webUrl));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(result.getWebUrl()));
                 getContext().startActivity(browserIntent);
             }
         });
 
-        TextView webTitle = convertView.findViewById(R.id.webTitle);
-        webTitle.setText(result.getwebTitle());
+        TextView webTitleTextView = convertView.findViewById(R.id.webTitle);
+        webTitleTextView.setText(result.getwebTitle());
 
-        TextView webUrl = convertView.findViewById(R.id.webUrl);
-        webUrl.setText(result.getWebUrl());
+        TextView webUrlTextView = convertView.findViewById(R.id.webUrl);
+        webUrlTextView.setText(result.getWebUrl());
 
-        TextView sectionName = convertView.findViewById(R.id.sectionName);
-        sectionName.setText(result.getSectionName());
+        TextView sectionNameTextView = convertView.findViewById(R.id.sectionName);
+        sectionNameTextView.setText(result.getSectionName());
+
+        TextView dateTextView = convertView.findViewById(R.id.date);
+        String dateString = result.getWebPublicationDate();
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+        try {
+            Date date = format.parse(dateString);
+            String formattedDate = format.format(date);
+            dateTextView.setText(formattedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        TextView authorTextView = convertView.findViewById(R.id.author);
+        authorTextView.setText(result.getAuthor());
 
         return convertView;
     }

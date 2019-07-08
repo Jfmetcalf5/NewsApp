@@ -1,25 +1,29 @@
 package com.example.mynewsapp;
 
-public class Result {
+class Result {
 
-    public Result(String sectionName, String webTitle, String webUrl) {
+    Result(String sectionName, String webTitle, String webUrl, String webPublicationDate, String author) {
         _sectionName = sectionName;
         _webTitle = webTitle;
         _webUrl = webUrl;
+        _webPublicationDate = webPublicationDate;
+        _author = author;
     }
 
-    public String getSectionName() {
+    String getSectionName() {
         return _sectionName;
     }
-    public String getwebTitle() {
-        return _webTitle;
-    }
-    public String getWebUrl() {
+    String getwebTitle() { return _webTitle; }
+    String getWebUrl() {
         return _webUrl;
     }
+    String getWebPublicationDate() { return _webPublicationDate; }
+    String getAuthor() { return _author; }
 
-    String _sectionName;
-    String _webTitle;
-    String _webUrl;
+    private String _sectionName;
+    private String _webTitle;
+    private String _webUrl;
+    private String _webPublicationDate;
+    private String _author;
 
 }
